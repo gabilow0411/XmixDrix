@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         pl2 = intent.getStringExtra("second");
         p1.setText(pl2+ "-X");
         p2.setText(pl1+ "-O");
+        int x=1;
         sharedPref = this.getSharedPreferences("myName", MODE_PRIVATE);
         if(!sharedPref.contains("score"))
         {
