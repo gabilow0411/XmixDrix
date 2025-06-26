@@ -1,0 +1,42 @@
+Index: app/src/main/java/gabi/low/class2ex/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package gabi.low.class2ex;\r\n\r\nimport android.content.Intent;\r\nimport android.content.SharedPreferences;\r\nimport android.os.Bundle;\r\nimport android.util.Log;\r\nimport android.view.View;\r\nimport android.widget.Button;\r\nimport android.widget.TextView;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.activity.EdgeToEdge;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.core.graphics.Insets;\r\nimport androidx.core.view.ViewCompat;\r\nimport androidx.core.view.WindowInsetsCompat;\r\n\r\npublic class MainActivity extends AppCompatActivity implements View.OnClickListener {\r\n    public  Model m;\r\n    public TextView p1;\r\n    public TextView p2;\r\n    public  String pl1;\r\n    public String pl2;\r\n    public SharedPreferences sharedPref;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        EdgeToEdge.enable(this);\r\n        setContentView(R.layout.activity_main);\r\n\r\n        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {\r\n            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());\r\n            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);\r\n            return insets;\r\n        });\r\n        p1 = findViewById(R.id.p2);\r\n        p2 = findViewById(R.id.p1);\r\n        Intent intent = getIntent();\r\n        pl1 = intent.getStringExtra(\"first\");\r\n        pl2 = intent.getStringExtra(\"second\");\r\n        p1.setText(pl2+ \"-X\");\r\n        p2.setText(pl1+ \"-O\");\r\n        sharedPref = this.getSharedPreferences(\"myName\", MODE_PRIVATE);\r\n        if(!sharedPref.contains(\"score\"))\r\n        {\r\n            SharedPreferences.Editor editor=sharedPref.edit();\r\n            editor.putInt(\"score\", 0);\r\n            editor.commit();\r\n        }\r\n        // Connect all buttons to the same click handler\r\n        for (int i = 1; i <= 9; i++) {\r\n            String buttonID = \"button\" + i;\r\n            int resID = getResources().getIdentifier(buttonID, \"id\", getPackageName());\r\n            Button b = findViewById(resID);\r\n            b.setOnClickListener(this);\r\n        }\r\n        //create board\r\n         m = new Model();\r\n\r\n    }\r\n\r\n    @Override\r\n    public void onClick(View view) {\r\n        String tag = view.getTag().toString();\r\n        System.out.println(\"tag\"+tag);\r\n        int row = tag.charAt(0)-'0';\r\n        int column = tag.charAt(1)-'0';\r\n        System.out.println(\"row\"+row);\r\n        System.out.println(\"colum\"+column);\r\n        Button clickedButton = (Button) view;\r\n        Log.d(\"Android Seminar\", \"row: \" + row + \"column: \" + column );\r\n         tag = (String) view.getTag(); // read tag from the button\r\n        String s = m.updateBoard(row,column);\r\n        if ((!s.equals(\"n\")))\r\n            clickedButton.setText(s);\r\nif(m.checkWin().equals(\"x\")) {\r\n    int score = sharedPref.getInt(\"score\",0);\r\n    score++;\r\n    SharedPreferences.Editor editor=sharedPref.edit();\r\n    editor.putInt(\"score\", score);\r\n    editor.commit();\r\n    Toast.makeText(this, \"the winner is  : \" + pl2 + score, Toast.LENGTH_SHORT).show();\r\n}\r\nelse if (m.checkWin().equals(\"o\"))\r\n    Toast.makeText(this, \"the winner is : O \" + pl1, Toast.LENGTH_SHORT).show();\r\n\r\n\r\n\r\n        //Toast.makeText(this, \"name 1: \" + pl1, Toast.LENGTH_SHORT).show();\r\n        //Toast.makeText(this, \"name 2: \" + pl2, Toast.LENGTH_SHORT).show();\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/gabi/low/class2ex/MainActivity.java b/app/src/main/java/gabi/low/class2ex/MainActivity.java
+--- a/app/src/main/java/gabi/low/class2ex/MainActivity.java	(revision 77094662ded05c734a0a92e963a86e12de3e1bb9)
++++ b/app/src/main/java/gabi/low/class2ex/MainActivity.java	(date 1750936124113)
+@@ -41,6 +41,7 @@
+         pl2 = intent.getStringExtra("second");
+         p1.setText(pl2+ "-X");
+         p2.setText(pl1+ "-O");
++        int x=1;
+         sharedPref = this.getSharedPreferences("myName", MODE_PRIVATE);
+         if(!sharedPref.contains("score"))
+         {
+Index: app/src/main/java/gabi/low/class2ex/StartActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package gabi.low.class2ex;\r\n\r\nimport android.content.Intent;\r\nimport android.content.SharedPreferences;\r\nimport android.os.Bundle;\r\nimport android.view.View;\r\nimport android.widget.Button;\r\nimport android.widget.EditText;\r\n\r\nimport androidx.activity.EdgeToEdge;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.core.graphics.Insets;\r\nimport androidx.core.view.ViewCompat;\r\nimport androidx.core.view.WindowInsetsCompat;\r\n\r\npublic class StartActivity extends AppCompatActivity {\r\n    public EditText pl1;\r\n    public  EditText pl2;\r\n    public  Button start;\r\n    public SharedPreferences sharedPref;\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        EdgeToEdge.enable(this);\r\n        setContentView(R.layout.start);\r\n        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {\r\n            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());\r\n            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);\r\n            return insets;\r\n        });\r\n        intit();\r\n\r\n        sharedPref = this.getSharedPreferences(\"myName\", MODE_PRIVATE);\r\n        if(sharedPref.contains(\"pName\"))\r\n        {\r\n           String name = sharedPref.getString(\"pName\", \"\");\r\n           pl2.setText(name);\r\n        }\r\n        start.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                String f = pl1.getText().toString();\r\n                String s = pl2.getText().toString();\r\n                Intent intent = new Intent(StartActivity.this, MainActivity.class);\r\n                intent.putExtra(\"first\", f);\r\n                intent.putExtra(\"second\", s);\r\n                SharedPreferences.Editor preferencesEditor = sharedPref.edit();\r\n                preferencesEditor.putString(\"pName\", s);\r\n                preferencesEditor.commit();\r\n                startActivity(intent);\r\n            }\r\n        });\r\n    }\r\n\r\n    private void intit() {\r\n        pl1 = findViewById(R.id.first);\r\n        pl2 = findViewById(R.id.second);\r\n        start = findViewById(R.id.go);\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/gabi/low/class2ex/StartActivity.java b/app/src/main/java/gabi/low/class2ex/StartActivity.java
+--- a/app/src/main/java/gabi/low/class2ex/StartActivity.java	(revision 77094662ded05c734a0a92e963a86e12de3e1bb9)
++++ b/app/src/main/java/gabi/low/class2ex/StartActivity.java	(date 1750937502641)
+@@ -1,5 +1,5 @@
+ package gabi.low.class2ex;
+-
++//this is my chack!!!!!!!!!!!!
+ import android.content.Intent;
+ import android.content.SharedPreferences;
+ import android.os.Bundle;
+@@ -57,4 +57,4 @@
+         pl2 = findViewById(R.id.second);
+         start = findViewById(R.id.go);
+     }
+-}
+\ No newline at end of file
++}
